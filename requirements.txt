@@ -1,0 +1,13 @@
+Based on the provided Python code, the following package requirements can be identified:
+
+- requests
+- googlesearch
+- bs4 (BeautifulSoup)
+- transformers
+- sqlite3
+- datetime
+- json
+- boto3
+- matplotlib (plt)
+
+You can install these packages using the `pip install` command followed by the package name.
