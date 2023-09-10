@@ -8,6 +8,7 @@ import json
 import boto3
 import matplotlib.pyplot as plt
 
+
 class AutonomousWebScraper:
     def __init__(self):
         self.user_interface = UserInterface()
@@ -43,14 +44,14 @@ class AutonomousWebScraper:
 
     def generate_content(self):
         processed_data = self.database.get_processed_data()
-        generated_content = self.content_generator.generate_content(processed_data)
+        generated_content = self.content_generator.generate_content(
+            processed_data)
         self.database.update_generated_content(generated_content)
 
     def update_and_maintain(self):
         self.user_interface.update_search_query()
         self.user_interface.monitor_websites()
         self.user_interface.modify_scraping_methods()
-
 
 
 class UserInterface:
@@ -110,7 +111,8 @@ class Database:
         return website_urls
 
     def insert_data(self, url, data):
-        self.cur.execute('INSERT INTO data VALUES (?, ?)', (url, json.dumps(data)))
+        self.cur.execute('INSERT INTO data VALUES (?, ?)',
+                         (url, json.dumps(data)))
         self.conn.commit()
 
     def get_data(self):
@@ -121,7 +123,8 @@ class Database:
 
     def update_processed_data(self, processed_data):
         for url, data in processed_data.items():
-            self.cur.execute('UPDATE data SET processed_data = ? WHERE url = ?', (json.dumps(data), url))
+            self.cur.execute(
+                'UPDATE data SET processed_data = ? WHERE url = ?', (json.dumps(data), url))
         self.conn.commit()
 
     def get_processed_data(self):
@@ -132,7 +135,8 @@ class Database:
 
     def update_generated_content(self, generated_content):
         for url, content in generated_content.items():
-            self.cur.execute('UPDATE data SET generated_content = ? WHERE url = ?', (content, url))
+            self.cur.execute(
+                'UPDATE data SET generated_content = ? WHERE url = ?', (content, url))
         self.conn.commit()
 
 
