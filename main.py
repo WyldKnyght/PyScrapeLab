@@ -26,10 +26,7 @@ class AutonomousWebScraper:
         return input("Enter search query: ")
 
     def search(self, search_query):
-        search_results = []
-        for result in search(search_query, num_results=10):
-            search_results.append(result)
-        return search_results
+        return list(search(search_query, num_results=10))
 
     def extract_urls(self, search_results):
         website_urls = []
@@ -47,9 +44,7 @@ class AutonomousWebScraper:
     def extract_data(self, url):
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
-        data = []
-        # Extract desired data from the website
-        return data
+        return []
 
     def process_data(self):
         data = self.database.get_data()
@@ -57,11 +52,8 @@ class AutonomousWebScraper:
         self.database.update_processed_data(processed_data)
 
     def process_data(self, data):
-        processed_data = {}
         nlp_pipeline = pipeline("text-generation")
-        for url, raw_data in data.items():
-            processed_data[url] = nlp_pipeline(raw_data)
-        return processed_data
+        return {url: nlp_pipeline(raw_data) for url, raw_data in data.items()}
 
     def generate_content(self):
         processed_data = self.database.get_processed_data()
@@ -69,11 +61,10 @@ class AutonomousWebScraper:
         self.database.update_generated_content(generated_content)
 
     def generate_content(self, processed_data):
-        generated_content = {}
-        for url, processed_text in processed_data.items():
-            # Generate content using the processed text
-            generated_content[url] = "Generated content"
-        return generated_content
+        return {
+            url: "Generated content"
+            for url, processed_text in processed_data.items()
+        }
 
     def update_and_maintain(self):
         self.update_search_query()
@@ -109,8 +100,7 @@ class Database:
     def get_urls(self):
         self.cur.execute('SELECT url FROM urls')
         rows = self.cur.fetchall()
-        website_urls = [row[0] for row in rows]
-        return website_urls
+        return [row[0] for row in rows]
 
     def insert_data(self, url, data):
         self.cur.execute('INSERT INTO data VALUES (?, ?)',
@@ -120,8 +110,7 @@ class Database:
     def get_data(self):
         self.cur.execute('SELECT * FROM data')
         rows = self.cur.fetchall()
-        data = {row[0]: json.loads(row[1]) for row in rows}
-        return data
+        return {row[0]: json.loads(row[1]) for row in rows}
 
     def update_processed_data(self, processed_data):
         for url, data in processed_data.items():
@@ -132,8 +121,7 @@ class Database:
     def get_processed_data(self):
         self.cur.execute('SELECT url, processed_data FROM data')
         rows = self.cur.fetchall()
-        processed_data = {row[0]: json.loads(row[1]) for row in rows}
-        return processed_data
+        return {row[0]: json.loads(row[1]) for row in rows}
 
     def update_generated_content(self, generated_content):
         for url, content in generated_content.items():
